@@ -10,13 +10,16 @@ import SwiftUI
 struct ContentView: View {
     @State private var searchText: String = ""
     @State private var isSearchCollapsed: Bool = false
-    @Namespace private var glassNamespace
-
+    @State private var searchWidth: CGFloat = 300
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 16) {
-                    ForEach(0..<30, id: \.self) {_ in 
+                    Button("Test") {
+                        isSearchCollapsed.toggle()
+                    }
+                    ForEach(0..<30, id: \.self) {_ in
                         RoundedRectangle(cornerRadius: 20)
                             .fill(.white.opacity(0.3))
                             .frame(height: 120)
@@ -26,7 +29,7 @@ struct ContentView: View {
             }
             .onScrollGeometryChange(for: Bool.self) {
                 geometry in
-                geometry.contentOffset.y+geometry.contentInsets.top>30
+                geometry.contentOffset.y + geometry.contentInsets.top>30
             } action: {
                 _, newValue in
                 withAnimation {
@@ -48,16 +51,39 @@ struct ContentView: View {
                             .font(.title2)
                     }
                     .buttonStyle(.glass)
-                    
-                    TextField("Search", text: $searchText)
-                        .textFieldStyle(.plain)
-                        .font(.title3)
-                        .padding()
-                        .frame(maxWidth: .infinity)
+                    ZStack {
+                        ZStack {
+                            TextField("Search", text: $searchText)
+                                .textFieldStyle(.plain)
+                                .font(.title3)
+                                .padding(.horizontal)
+                                .opacity(isSearchCollapsed ? 0 : 1)
+                                .allowsHitTesting(!isSearchCollapsed)
+                            
+                            Button { } label: {
+                                Image(systemName: "magnifyingGlass")
+                            }
+                            .buttonStyle(.plain)
+                            .font(.title2)
+                            .opacity(isSearchCollapsed ? 1 : 0)
+                            .allowsHitTesting(isSearchCollapsed)
+                        }
+                        .frame(width: isSearchCollapsed ? 50 : searchWidth, height: 50)
+                        .clipped()
                         .glassEffect(.regular, in: .capsule)
+                        .animation(.smooth, value: isSearchCollapsed)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .onGeometryChange(for: CGFloat.self) {
+                        geometry in
+                        geometry.size.width
+                    } action: {
+                        newWidth in
+                        searchWidth = newWidth
+                    }
+                    .frame(maxWidth: 700)
+                    .padding()
                 }
-                .frame(maxWidth: 700)
-                .padding()
             }
         }
     }
