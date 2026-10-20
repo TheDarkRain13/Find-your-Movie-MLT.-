@@ -52,6 +52,11 @@ struct ContentView: View {
                             .font(.title2)
                     }
                     .buttonStyle(.glass)
+                    NavigationLink(destination: Text("News")) {
+                        Image(systemName: "book.pages")
+                            .font(.title2)
+                    }
+                    .buttonStyle(.glass)
                     ZStack {
                         ZStack {
                             HStack {
