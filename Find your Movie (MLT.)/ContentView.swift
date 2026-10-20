@@ -94,6 +94,7 @@ struct ContentView: View {
                 .frame(maxWidth: 700)
                 .padding()
             }
+            .scrollEdgeEffectStyle(.soft, for: .top)
         }
     }
 }
