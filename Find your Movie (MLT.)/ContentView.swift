@@ -54,13 +54,25 @@ struct ContentView: View {
                     .buttonStyle(.glass)
                     ZStack {
                         ZStack {
-                            TextField("Search", text: $searchText)
-                                .textFieldStyle(.plain)
-                                .focused($isSearchFocused)
-                                .font(.title3)
-                                .padding(.horizontal)
-                                .opacity(isSearchCollapsed ? 0 : 1)
-                                .allowsHitTesting(!isSearchCollapsed)
+                            HStack {
+                                TextField("Search", text: $searchText)
+                                    .textFieldStyle(.plain)
+                                    .focused($isSearchFocused)
+                                    .font(.title3)
+                                if !searchText.isEmpty {
+                                    Button {
+                                        searchText = ""
+                                        isSearchFocused = true
+                                    } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                    }
+                                    .buttonStyle(.plain)
+                                    .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding(.horizontal)
+                            .opacity(isSearchCollapsed ? 0 : 1)
+                            .allowsHitTesting(!isSearchCollapsed)
                             
                             Button {
                                 withAnimation {

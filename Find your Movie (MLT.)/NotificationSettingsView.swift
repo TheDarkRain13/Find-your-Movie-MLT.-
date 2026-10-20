@@ -2,14 +2,19 @@
 //  NotificationSettingsView.swift
 //  Find your Movie (MLT.)
 //
-//  Created by Lucas Obuch on 20.10.26.
+//  Created by TheDarkRain13 on 20.10.26.
 //
 
 import SwiftUI
 
 struct NotificationSettingsView: View {
+    @AppStorage("notificationsEnabled") private var notificationsEnabled = true
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Form {
+            Toggle("Enable notifications", isOn: $notificationsEnabled)
+        }
+        .navigationTitle("Notification")
     }
 }
 

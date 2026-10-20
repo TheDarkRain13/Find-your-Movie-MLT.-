@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ProfileView: View {
-    private let userName = "User"
-    private let userEmail = "user@example.com"
+    @AppStorage("userName") private var userName = "User"
+    @AppStorage("userEmail") private var userEmail = "user@example.com"
+    @State private var showLogoutConfirmation: Bool = false
     
     var body: some View {
         ScrollView {
@@ -29,7 +30,7 @@ struct ProfileView: View {
                 }
                 .frame(maxWidth: .infinity)
                 VStack(spacing: 0) {
-                    NavigationLink(destination: Text("Account Settings")) {
+                    NavigationLink(destination: AccountSettingsView()) {
                         HStack {
                             Image(systemName: "gearshape")
                                 .frame(width: 28)
@@ -43,7 +44,7 @@ struct ProfileView: View {
                     }
                     .buttonStyle(.plain)
                     Divider()
-                    NavigationLink(destination: Text("Notifications")) {
+                    NavigationLink(destination: NotificationSettingsView()) {
                         HStack {
                             Image(systemName: "bell")
                                 .frame(width: 28)
@@ -100,14 +101,22 @@ struct ProfileView: View {
                     .buttonStyle(.plain)
                 }
                 .glassEffect(.regular, in: .rect(cornerRadius: 24))
-                Button("Logout") {
-                    
+                Button("Log Out") {
+                    showLogoutConfirmation = true
                 }
                 .buttonStyle(.glass)
                 .frame(maxWidth: .infinity)
                 .tint(.red)
+                .confirmationDialog("Log Out?", isPresented: $showLogoutConfirmation, titleVisibility: .visible) {
+                    Button("Log Out", role: .destructive) {}
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("You will need to sign in again.")
+                }
             }
             .padding()
+            .frame(maxWidth: 600)
+            .frame(maxWidth: .infinity)
         }
         .navigationTitle("Profile")
         .background(
