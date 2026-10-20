@@ -91,7 +91,7 @@ struct ContentView: View {
                         searchWidth = newWidth
                     }
                 }
-                .frame(maxWidth: 700)
+                .frame(maxWidth: isSearchCollapsed ? .infinity : 700)
                 .padding()
             }
             .scrollEdgeEffectStyle(.soft, for: .top)
