@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct AccountSettingsView: View {
     @AppStorage("userName") private var userName = "User"
     @AppStorage("userEmail") private var userEmail = "user@example.com"
+    @AppStorage("profileImageFileName") private var profileImageFileName = ""
+    @State private var selectedPhoto: PhotosPickerItem? = nil
     
     var body: some View {
         Form {
@@ -23,16 +26,46 @@ struct AccountSettingsView: View {
                 HStack {
                     Text("Password")
                     Spacer()
-                    Text("Comming soon")
+                    Text("Coming soon")
                         .foregroundStyle(.secondary)
                 }
             }
             Section("Profile Picture") {
-                HStack {
-                    Text("Photo")
-                    Spacer()
-                    Text("Comming soon")
-                        .foregroundStyle(.secondary)
+                PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                    Text("Choose Photo")
+                }
+                .onChange(of: selectedPhoto) { _, newValue in
+                    Task {
+                        if let data = try? await newValue?.loadTransferable(type: Data.self) {
+                            do {
+                                try FileManager.default.createDirectory(
+                                    at: URL.documentsDirectory,
+                                    withIntermediateDirectories: true
+                                    )
+                                
+                                let newFileName = "profile-\(UUID().uuidString).jpg"
+                                let newURL = URL.documentsDirectory.appending(path: newFileName)
+                                try data.write(to: newURL)
+                                
+                                if !profileImageFileName.isEmpty {
+                                    let oldURL = URL.documentsDirectory.appending(path: profileImageFileName)
+                                    try? FileManager.default.removeItem(at: oldURL)
+                                }
+                                
+                                profileImageFileName = newFileName
+                            } catch {
+                                print("Could not save profile image: \(error)")
+                            }
+                        }
+                    }
+                }
+                if !profileImageFileName.isEmpty {
+                    Button("Remove Photo", role: .destructive) {
+                        let url = URL.desktopDirectory.appending(path: profileImageFileName)
+                        try? FileManager.default.removeItem(at: url)
+                        profileImageFileName = ""
+                        selectedPhoto = nil
+                    }
                 }
             }
         }

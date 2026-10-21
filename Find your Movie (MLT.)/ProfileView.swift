@@ -11,16 +11,30 @@ struct ProfileView: View {
     @AppStorage("userName") private var userName = "User"
     @AppStorage("userEmail") private var userEmail = "user@example.com"
     @State private var showLogoutConfirmation: Bool = false
+    @AppStorage("profileImageFileName") private var profileImageFileName = ""
     
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
                 VStack(spacing: 8) {
-                    Image(systemName: "person.crop.circle.fill")
-                        .resizable()
-                        .scaledToFit()
+                    if profileImageFileName.isEmpty {
+                        Image(systemName: "person.crop.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 120, height: 120)
+                            .foregroundStyle(.white)
+                    } else {
+                        AsyncImage(url: URL.documentsDirectory.appending(path: profileImageFileName)) {
+                            image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            ProgressView()
+                        }
                         .frame(width: 120, height: 120)
-                        .foregroundStyle(.white)
+                        .clipShape(Circle())
+                    }
                     Text(userName)
                         .font(.title)
                         .bold()
