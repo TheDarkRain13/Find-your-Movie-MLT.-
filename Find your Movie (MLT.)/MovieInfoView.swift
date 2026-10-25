@@ -36,14 +36,25 @@ struct  MovieInfoView: View {
                                 Text("\(minutes) Min.")
                                     .font(.caption)
                         }
-                        Text(String(format: "%.1f", movie.voteAverage))
-                            .foregroundStyle(.tertiary)
+                        HStack(spacing : 4) {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(.yellow)
+                            Text(String(format: "%.1f", movie.voteAverage))
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
-                Text("Description")
-                    .font(.headline)
-                Text(movie.overview)
-    
+                VStack(alignment: leading, spacing: 8){
+                    Text("Description")
+                        .font(.headline)
+                    Text(movie.overview)
+                        .padding(.top, 30)
+                        .background(SecondarySystemBackground)
+                }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .classEffect(12)
+                    .padding(.top, 30)
             }.padding()
         }
     }
