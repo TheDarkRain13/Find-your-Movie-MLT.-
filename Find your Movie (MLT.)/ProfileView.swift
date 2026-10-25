@@ -86,7 +86,7 @@ struct ProfileView: View {
                     }
                     .buttonStyle(.plain)
                     Divider()
-                    NavigationLink(destination: Text("Appearance")) {
+                    NavigationLink(destination: AppearanceSettingsView()) {
                         HStack {
                             Image(systemName: "paintpalette")
                                 .frame(width: 28)

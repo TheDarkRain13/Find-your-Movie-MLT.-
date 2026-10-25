@@ -8,8 +8,24 @@
 import SwiftUI
 
 struct AppearanceSettingsView: View {
+    @AppStorage("appearance") private var appearance = "system"
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Form {
+            Section("Theme") {
+                Picker("Theme", selection: $appearance) {
+                    Text("System")
+                        .tag("system")
+                    Text("Light")
+                        .tag("light")
+                    Text("Dark")
+                        .tag("dark")
+                }
+                .pickerStyle(.inline)
+                .labelsHidden()
+            }
+        }
+        .navigationTitle("Appearance")
     }
 }
 
